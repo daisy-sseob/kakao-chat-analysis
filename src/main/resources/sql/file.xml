@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="file">
+
+  <insert id="fileInsert" parameterType="HashMap">
+  	insert into files 
+		( userNo,fileTitle, fileName, fileURL, regDate)
+	values
+		(#{userNo},#{fileTitle},#{fileName},#{fileURL},DATE_FORMAT(NOW(),'%Y%m%d'));
+  </insert>
+  
+  <select id="fileList" resultType="HashMap" parameterType="HashMap">
+  	select * from files where userNo = #{userNo} and delYn = 'N' order by fileNo desc limit #{start} , 20 
+  	
+  </select>
+  
+  <select id="fileSelectOne" resultType="HashMap" parameterType="HashMap">
+  	select * from files
+  	  	where
+  	  		fileName = #{fileName} 
+  	  	and
+  	  		userNo = #{userNo} 
+  	  	and
+  	  		delYn = 'N' 
+  		limit 1 
+  </select>
+  
+  <select id="getFileURL" resultType="HashMap" parameterType="HashMap">
+  	select * from files 
+  		where
+  			fileNo = #{fileNo}
+  		and 
+  			delYn = 'N'
+  		limit 1
+  </select>
+  
+  <update id="fileDelete" parameterType="HashMap">
+  	update files set delYn = 'Y' where fileNo = #{fileNo}
+  	limit 1
+  </update>
+  
+  <select id="fileRowCount" resultType="HashMap">
+  	select count(*) as cnt from files where delYn = 'N' and userNo = #{userNo}
+  </select>
+  
+</mapper>
+

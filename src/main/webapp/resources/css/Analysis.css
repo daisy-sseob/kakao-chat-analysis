@@ -1,0 +1,182 @@
+    .animation {
+    animation-name: slide;
+    -webkit-animation-name: slide;
+    animation-duration: 1s;
+    -webkit-animation-duration: 1s;
+    }
+
+    @-webkit-keyframes slide {
+        0% {
+            opacity: 0;
+            transform: translateX(-80%);
+        } 
+    }
+    ::-webkit-scrollbar { 
+        display: none; 
+    }
+    html,body,p{
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+    #h1{
+     margin-left: 10px;
+    }
+    #home{
+    	float:right;
+    	margin-top : 15px;
+    	margin-right : 15px;
+    }
+    #outer{
+        width: 100%;
+        height: 1500px;
+        
+        background-color: black;
+    }
+    #left{
+        width: 500px;
+        height: 1200px;
+        float: left;
+        
+    }
+    #right{
+        width: calc(100% - 500px);
+        height: 100%;
+        float: right;
+    }
+    
+    /*****************왼쪽영역***************/
+    #leftTitle{
+        width: 500px;
+        height: 100px;
+        
+        background-color: #ffd700; 
+        border-radius: 7px;
+    }
+
+    #leftList{
+        width: 100%;
+        height: 700px;
+
+        float: left;
+        margin-top: 100px;
+        border-radius: 7px;
+        background-color: #ffd700;
+        
+    }
+    #left h1{
+        float: left;
+        margin-top: 30px;
+    }
+    #leftImg{
+        float: left;
+        margin-top: 25px;
+        margin-left: 15px;
+    }
+    #fileList{
+        height: 80%;
+    }
+    #paging{
+        text-align: center;
+       	margin-top: 20px;
+    }
+	.removeDiv{
+	    width: 32px;
+	    height: 23px;
+	    margin-right: 10px;
+	    
+	    float: right !important;
+	    text-align: center;
+	}
+	.remove{
+	    width: 100%;
+	    height: 100%;
+	    font-size: 5px;
+	}
+	
+    #olList{
+        margin-top: 10px;
+        width: calc(100% - 20px);
+    }
+	.FileLi{
+	    width: calc(100% - 5px);
+	    height: 25px;
+	    margin-top: 3px;
+	    margin-left:5px;
+	    border: 0.5px solid rgba(255, 93, 0, 0.73);
+	    border-radius: 5px;
+	}
+	.FileLi > div {
+		display: inline-block;
+		float: left;
+	}
+	.fileTitle{
+		width: calc(190px - 15px);
+		padding-left: 15px;
+	}
+	.fileName{
+		width: 190px;
+		cursor: pointer;
+	}
+	.fileNo{
+		display:none !important;
+	}
+	
+    .page{
+    	cursor: pointer;
+    }
+    .pagination{
+
+    }
+    /******************오른쪽**************/
+    #chartDiv{
+        width: 1100px;
+        height: 970px;
+        
+        margin-left: 200px;
+        border-radius: 7px;
+        background-color: #ffd700;
+    }
+    
+    #chartBtnDiv{
+    	width: 100%;
+    	height: 34px;
+    }
+    #btnDiv{
+        height: 34px;
+        width: 550px;
+        
+        float: right;
+        display: none;
+    }
+    
+    #chartViewDiv{
+        height: 902px;
+        width: 100%;
+    }
+    .chartView{
+    	height: 100%;
+    	width: 100%;
+    	
+    	float:left; 
+    }
+    #chartView2{
+    	display: none;
+    }
+    #chartView3{
+    	display: none;
+    }
+    #chartView4{
+    	display: none;
+    }
+
+    #saveDive{
+        width: 100%;
+        height: 34px;
+        float: left;
+    }
+
+    #save{
+        width: 100%;
+        
+    }

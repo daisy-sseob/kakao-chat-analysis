@@ -1,0 +1,165 @@
+html,body{
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+    #outer{
+        height: 100vh;
+        width: 1920px;
+        float: left;
+        background-color: black;
+    }
+/*===========상단바==============*/
+    #main-top{
+        height: 150px;
+        width: 1920px;
+        float: left;
+
+    }
+    #top-L{
+        width: 960px;
+        height: 100%;
+        float: left;
+        
+    }
+    #shuttle{
+        width: 100%;
+    }
+    #shuttle img{
+        width: 60px;
+        height: 60px;
+        margin-top: 100px;
+        margin-left: 20px;
+
+    }
+    #top-R{
+        width: 960px;
+        height: 100%;
+        float: left;
+    }
+    #top-R-R{
+        height: 100%;
+        width: 58%;
+        float: left;
+    }
+    #top-R-L{
+        height: 100%;
+        width: 42%;
+        float: left;
+    }
+    #top-R-bottom{
+        
+    }
+    .btn_div{
+        width: 90px;
+        height: 30px;
+        
+        float: right;
+        margin-top: 120px;
+        border-radius: 7px;
+    }
+    #myinfoDiv{
+        display: none;
+    }
+    .btn_div button{
+        height: 100%;
+        width: 100%;
+        
+        border-radius: 5px;
+        background-color: #ffd700;
+        color: black;
+    }
+/*===========중앙==============*/
+    #main-center{
+        height: calc(100% - 150px);
+        width: 1920px;
+        float: left;
+    }
+    #upload{
+        height: 550px;
+        width: 800px;
+        
+        background-color: #ffd700; 
+        margin-top:5vh;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 7px;
+    }
+    #h1 div{
+     float: left;
+    }
+    #h2{
+        float: left;
+    }
+    #file_input{
+        margin-top: 10px;
+        float: left;
+        width: 100%;
+    }
+    #titleDiv{
+    	float:left;
+    	margin-top:50px;
+    	width: 100%;
+    }
+    #title{
+    	width: 100%;
+		text-align: left;
+    }
+    #img{
+        margin-top: 15px;
+        margin-left: 15px;
+    }
+    #fileSubmit{
+    	float: left;
+    	width: 20%;
+    	margin-top: 10px;
+    }
+    #analysis{
+        margin-top: 56px;
+        width: 100%;
+        float: left;
+    }
+    #checkBoxDiv{
+    	width: 100%;
+    	height: 100px;
+    	margin-top: 5px;
+    }
+    .checkBox{
+		width: 800px;
+    }
+    #check{
+    	width: 100%;
+    	margin-left: 560px;
+    }
+    #checkLogin{
+    	width: 100%;
+    	margin-left: 560px;
+    }
+    .animation {
+    animation-name: slide;
+    -webkit-animation-name: slide;
+    animation-duration: 1s;
+    -webkit-animation-duration: 1s;
+    }
+    @-webkit-keyframes slide {
+        0% {
+            opacity: 0;
+            transform: translateY(-80%);
+        } 
+    }
+
+    .shuttle{
+        animation-name: shuttle;
+        -webkit-animation-name: shuttle;
+        -webkit-animation-duration: 2s;
+        animation-iteration-count: infinite;
+        /*animation-fill-mode:backwards;*/
+    }
+    @-webkit-keyframes shuttle{
+        0%{
+            opacity: 0;
+            transform: translateX(0);
+        }100%{
+            transform: translateX(960px);
+        }
+    }

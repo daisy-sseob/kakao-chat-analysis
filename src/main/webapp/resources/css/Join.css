@@ -1,0 +1,96 @@
+    html,body{
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+    #main-top{
+        height: 150px;
+        width: 1920px;
+    }
+    #outer{
+    height: 100vh;
+    width: 1920px;
+    float: left;
+
+    background-color: black;
+    }
+    #LoginBox{
+        height: 350px;
+        width: 600px;
+        
+        background-color: #ffd700; 
+        margin-top:5vh;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 7px;
+    }
+    #h1{
+        width: 100%;
+        height: 50px;
+    }
+    #h1 div{
+     float: left;
+    }
+    #img{
+        margin-top: 15px;
+        margin-left: 15px;
+    }
+    #home{
+    	float:right;
+    	margin-top : 15px;
+    	margin-right : 15px;
+    }
+    #formBox{
+        width: 100%;
+        height: 250px;
+        margin-top: 50px;
+        text-align: center;
+    }
+	.form-control{
+		margin-left: 6px;
+	}
+    #joinInfo{
+        margin-top: 10px;
+        text-align: center;
+    }
+    #joinInfo input{ 
+        width: 98%;
+        margin-top: 5px;
+        text-align: left;
+    }
+    
+    #join{
+        width: 98%;
+        margin-top: 30px;
+    }
+    #checkBox{
+    	text-align: center;
+    }
+    #checkBox2{
+    	text-align: center;
+    }
+    #checkBox3{
+    	text-align: center;
+    }
+    #check{
+        width: 600px;
+    }
+    #checkpass{
+        width: 600px;
+    }
+    #checkId{
+        width: 600px;
+    }
+    .animation {
+    animation-name: slide;
+    -webkit-animation-name: slide;
+    animation-duration: 1s;
+    -webkit-animation-duration: 1s;
+    }
+
+    @-webkit-keyframes slide {
+        0% {
+            opacity: 0;
+            transform: translateY(-80%);
+        } 
+    }
