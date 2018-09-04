@@ -85,20 +85,13 @@ public class KaKaoUserService {
 			
 			HashMap<String, Object> map = kud.userLogin(param);
 			
-			HashMap<String, Object> usermap = new HashMap<String,Object>();
-			
-			usermap.put("userNo", map.get("userNo"));
-			usermap.put("toDate", map.get("toDate"));
-			usermap.put("name", map.get("name"));
-			usermap.put("id", map.get("id"));
-			
 			if(map == null) {
 				resultmap.put("status", 0);
 			}else {
 				resultmap.put("status", 1);
 			}
 			System.out.println(map);
-			sessionCheck.setAttribute("user", usermap);
+			sessionCheck.setAttribute("user", map);
 		}
 		System.out.println(kakaomap);
 		
