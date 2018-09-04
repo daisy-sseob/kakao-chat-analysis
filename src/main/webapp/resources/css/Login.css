@@ -91,7 +91,11 @@
     #checkId{
         width: 600px;
     }
+    #kakaoLogin{
     
+    	margin-left: 250px;
+    	margin-top: 15px;
+    }
     .animation {
     animation-name: slide;
     -webkit-animation-name: slide;

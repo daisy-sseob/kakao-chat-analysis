@@ -3,11 +3,12 @@
 <!DOCTYPE html>
 <html class="lottemarthappy">
 <head>
-  <title>KAKAO</title>
+  <title>SHS</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="resources/css/Font.css">
 <link rel="stylesheet" href="resources/css/Myinfo.css">
+<link rel="shortcut icon" type="image/x-icon" href="resources/img/amCharts.png">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
 
@@ -16,14 +17,14 @@ $(document).ready(function(){
 	$("#removeUserQ").hide();
 	
 	$("#home").on("click",function(){
-		location.href = "/web/";
+		location.href = "/";
 	});
 	
 	
 	/**************** 회원탈퇴 ***************/
 	$.ajax({
 		type:"post",
-		url : "/web/sessionCheck"
+		url : "/sessionCheck"
 	}).done(function(data){
 		
 		var d = JSON.parse(data);
@@ -47,14 +48,14 @@ $(document).ready(function(){
 		$("#removeUserQ").on("click",function(){
 			$.ajax({
 				type:"post",
-				url : "/web/removeUser",
+				url : "/removeUser",
 				data :  {"userNo" : userNo}
 			}).done(function(data){
 				var d = JSON.parse(data);
 				console.log(d.status);
 				if(d.status == 1){
 					alert("회원 탈되가 완료되었습니다.");
-					location.href = "/web/";
+					location.href = "/";
 				}
 			});
 		});
@@ -83,7 +84,7 @@ $(document).ready(function(){
 		        	}else{
 						$.ajax({
 							type:"post",
-							url : "/web/passModify",
+							url : "/passModify",
 							data:{
 								"userNo" : userNo,
 								"passwd" : passwd
@@ -94,20 +95,20 @@ $(document).ready(function(){
 							if(d.status == 1){
 								$.ajax({
 									type:"post",
-									url:"/web/logout"
+									url:"/logout"
 								}).done(function(data){
 									
 									alert("비밀번호 수정이 완료되었습니다.");
 									
 									var d = JSON.parse(data);
 									if(d.status == 1){
-										location.href = "/web/";
+										location.href = "/";
 									}else{
-										alert("오류발생 (myinfo.jsp /web/logout 2번째 if문)");
+										alert("오류발생 (myinfo.jsp /logout 2번째 if문)");
 									}
 								});
 							}else{
-								alert("오류발생 (myinfo.jsp /web/logout 1번째 if문)");
+								alert("오류발생 (myinfo.jsp /logout 1번째 if문)");
 							}
 						});
 		        	}
@@ -185,7 +186,7 @@ $(document).ready(function(){
                     </div>
                     <div id="bottomBox">
                         <input id="removeUser" type="button" class="btn btn-danger" value="회원탈퇴">
-                        <input id="removeUserQ" type="button" class="btn btn-danger" value="Real 탈퇴하시겠습니까 !?">
+                        <input id="removeUserQ" type="button" class="btn btn-danger" value="탈퇴버튼을 누르면 즉시 탈퇴 됩니다.">
                         
                     </div>
                     
@@ -199,8 +200,8 @@ $(document).ready(function(){
 		        </div>
 		        
 		        <div class="input-group join-box-input">
-		            <input type="password" class="form-control" id="change_pw" name="pass" placeholder="변경하실 비밀번호를 입력하세요.">
-		            <input type="password" class="form-control" id="change_pw_check" placeholder="비밀번호 확인">
+		            <input type="password" class="form-control" id="change_pw" name="pass" maxlength="20" placeholder="변경하실 비밀번호를 입력하세요.">
+		            <input type="password" class="form-control" id="change_pw_check" maxlength="20" placeholder="비밀번호 확인">
 		        </div>
 		        
 		        <div class="join-btn-box">

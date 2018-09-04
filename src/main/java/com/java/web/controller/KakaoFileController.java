@@ -1,36 +1,18 @@
 package com.java.web.controller;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.FilenameUtils;
+import javax.servlet.http.HttpSession;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.java.util.Utils;
 import com.java.web.service.KaKaoFileService;
-import com.jcraft.jsch.Session;
 
 @Controller
 public class KakaoFileController {
@@ -82,8 +64,8 @@ public class KakaoFileController {
 	}
 	
 	@RequestMapping("/fileRowCount")
-	public void fileRowCount( HttpServletRequest req, HttpServletResponse res) {
+	public void fileRowCount( HttpServletRequest req, HttpServletResponse res, HttpSession session) {
 		
-		Utils.JsonWriter(res, kfs.fileRowCount(req, res));
+		Utils.JsonWriter(res, kfs.fileRowCount(req, res,session));
 	}
 }

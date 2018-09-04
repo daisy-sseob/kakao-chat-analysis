@@ -23,7 +23,9 @@ public class KaKaoMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
 		outputKey.set(bean.getName());
 		
 		if(bean.getContents().length() > 0 ) {  
-			context.write(outputKey, outputValue);
+			if(bean.getName().indexOf("�") == -1) {
+				context.write(outputKey, outputValue);
+			}
 		}
 	}
 }

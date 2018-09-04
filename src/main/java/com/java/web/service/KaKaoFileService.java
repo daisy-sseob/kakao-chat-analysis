@@ -11,6 +11,8 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -24,21 +26,16 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-import org.codehaus.jettison.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.java.util.Utils;
 import com.java.web.dao.KaKaoFileDao;
 import com.java.web.mapper.KaKaoMapper;
 import com.java.web.mapper.KaKaoSlangMapper;
 import com.java.web.mapper.KaKaoTermMapper;
 import com.java.web.mapper.KaKaoTimeSlotMapper;
 import com.java.web.reducer.KaKaoReducer;
-
 import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 
 @Service
 public class KaKaoFileService {
@@ -207,8 +204,6 @@ public class KaKaoFileService {
 		
 		/**=====================RESULT 주소 END=====================**/
 		
-		
-		
 		/**=====================jobTalk Setting=====================**/
 		FileInputFormat.addInputPath(jobTalk, new Path(inputUri));
 		FileOutputFormat.setOutputPath(jobTalk, new Path(outputTalk));
@@ -275,8 +270,6 @@ public class KaKaoFileService {
 	    HashMap<String, Object> param = new HashMap<String,Object>();
 	    HashMap<String, Object> resultmap = new HashMap<String,Object>();
 	    
-	    List list = new ArrayList<>(); 
-	    
 		String userNo = req.getParameter("userNo");
 		String fileTitle  = req.getParameter("fileTitle");
 		System.out.println("fileTitle : " + fileTitle);
@@ -290,56 +283,59 @@ public class KaKaoFileService {
 				
 				byte[] bytes = files[i].getBytes();
 				
-				String originalFileName = files[i].getOriginalFilename().replaceAll(".txt","");
+				String fileCheck = files[i].getOriginalFilename().replaceAll(" ", "");
+				String Check = fileCheck.substring(fileCheck.length() - 4, fileCheck.length());
+				System.out.println(Check);
 				
-				System.out.println("===============originalFileName==============" + originalFileName);
-				
-				String hadoopFileName = dtf.format(now);		//hadoop 영역에 저장될 이름 
-				String fileURL = "/kakao/" + originalFileName +"_" + hadoopFileName;	// hadoop 영역 경로
-				String Name = files[i].getOriginalFilename(); 	// filename.확장자명. 밑에서 가공할 것. 
-				String fileName = FilenameUtils.removeExtension(Name); // DB에 들어갈 file이름
-				Path path = new Path(fileURL);
-				
-				if(fileName.trim().length() > 0 && fileTitle.trim().length() > 0) {
-					System.out.println("======================file insert=======================");
+				if(!Check.equals(".txt") ) {
+					resultmap.put("status", 2);
 					
-					/*******************************DB 에 파일정보 넣기 userNo와*************/
-					param.put("fileName", fileName);
-					param.put("fileURL", fileURL);
-					param.put("fileTitle", fileTitle);
-					System.out.println(param);
-					
-					int status = kfd.fileUpload(param);
-					
-					
-					/************************************************************************/
-					if(!file.exists(new Path("/kakao"))) { //존재여부 확인 
-						file.mkdirs(new Path("/kakao"));  //존재하지 않으면 생성 처리 
-					}
-					FSDataOutputStream fsos = file.create(path); //출력 객체 생성
-					fsos.write(bytes); 				 			//내용 작성 하기
-					fsos.close();								//출력 객체 종료
-					list.add(status);
-				}else {
-					
-					list.add(0);
+					return resultmap;
 				}
-
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
+					String originalFileName = files[i].getOriginalFilename().replaceAll(" ","").replaceAll(".txt","");
+					
+					System.out.println("===============originalFileName  >>>>>>>>" + originalFileName);
+					
+					String hadoopFileName = dtf.format(now);		//hadoop 영역에 저장될 이름 
+					String fileURL = "/kakao/" + originalFileName +"_" + hadoopFileName;	// hadoop 영역 경로
+					String Name = files[i].getOriginalFilename(); 	// filename.확장자명. 밑에서 가공할 것. 
+					String fileName = FilenameUtils.removeExtension(Name); // DB에 들어갈 file이름
+					Path path = new Path(fileURL);
+					
+					if(fileName.trim().length() > 0 && fileTitle.trim().length() > 0) {
+						System.out.println("======================file insert=======================");
+						
+						/*******************************DB 에 파일정보 넣기 userNo와*************/
+						param.put("fileName", fileName);
+						param.put("fileURL", fileURL);
+						param.put("fileTitle", fileTitle);
+						System.out.println(param);
+						
+						int status = kfd.fileUpload(param);
+						
+						
+						/************************************************************************/
+						if(!file.exists(new Path("/kakao"))) { //존재여부 확인 
+							file.mkdirs(new Path("/kakao"));  //존재하지 않으면 생성 처리 
+						}
+						FSDataOutputStream fsos = file.create(path); //출력 객체 생성
+						fsos.write(bytes); 				 			//내용 작성 하기
+						fsos.close();								//출력 객체 종료
+						resultmap.put("status", status);
+					}
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
 		}
-		resultmap.put("status", list);
 		System.out.println(resultmap);
 		System.out.println("==========================END===========================");
 		
 		return resultmap;
 	}
 	
-	
 	public HashMap<String, Object> chartData(String part_r_URL) throws IOException {
 		
-		System.out.println("시작===============================================");
+		System.out.println("=======================시작======================");
 		
 		URI uri = URI.create(part_r_URL);
         Path path = new Path(uri);
@@ -369,10 +365,9 @@ public class KaKaoFileService {
 		list.add(map);
 		}
 		resultMap.put("result", list);
-		System.out.println("끝===============================================");
+		System.out.println("========================끝=======================");
 		return resultMap;
 	}
-	
 	
 	public HashMap<String, Object> fileDelete(HttpServletRequest req, HttpServletResponse res){
 		
@@ -388,10 +383,16 @@ public class KaKaoFileService {
 		return resultmap;
 	}
 	
-	public HashMap<String, Object> fileRowCount(HttpServletRequest req,HttpServletResponse res){
+	public HashMap<String, Object> fileRowCount(HttpServletRequest req,HttpServletResponse res, HttpSession session){
 		
 		HashMap<String, Object> resultmap = new HashMap<String,Object>();
 		HashMap<String, Object> param = new HashMap<String,Object>();
+		
+		HashMap<String, Object> sessionUser = (HashMap<String, Object>) session.getAttribute("user");
+		HashMap<String, Object> sessionKakao = (HashMap<String, Object>) session.getAttribute("kakaoUser");
+		
+		System.out.println(" session : " + sessionKakao);
+		System.out.println(" session : " + sessionUser);
 		
 		String userNo = req.getParameter("userNo");
 		param.put("userNo", userNo);
@@ -399,7 +400,8 @@ public class KaKaoFileService {
 		HashMap<String, Object> map = kfd.fileRowCount(param); 
 		
 		resultmap.put("cnt", map);
-		System.out.println(map);
+		resultmap.put("kakaoUser", sessionKakao);
+		resultmap.put("user", sessionUser);
 		
 		return resultmap;
 	}

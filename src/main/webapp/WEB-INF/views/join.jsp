@@ -3,17 +3,18 @@
 <!DOCTYPE html>
 <html  class="lottemarthappy">
 <head>
-  <title>KAKAO</title>
+  <title>SHS</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="resources/css/Font.css">
 <link rel="stylesheet" href="resources/css/Join.css">
+<link rel="shortcut icon" type="image/x-icon" href="resources/img/amCharts.png">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
 	
 	$("#home").on("click",function(){
-		location.href = "/web/";
+		location.href = "/";
 	});
 	
 	$("#checkBox").hide();
@@ -31,7 +32,7 @@ $(document).ready(function(){
 		if (id.match(regExp) != null) {
 			$.ajax({
 				type:"post",
-				url:"/web/OverlapCheck",
+				url:"/OverlapCheck",
 				data: {
 					"id" : id,
 				}
@@ -66,7 +67,7 @@ $(document).ready(function(){
 			}else{
 				$.ajax({
 					type:"post",
-					url:"/web/userInsert",
+					url:"/userInsert",
 					data: {
 						"id" : id,
 						"name":name,
@@ -79,12 +80,12 @@ $(document).ready(function(){
 					console.log(d.status);
 					
 					if(d.status == 1){
-						location.href = "/web/";
+						location.href = "/";
 						alert("회원가입을 축하합니다 !");
 					}else if(d.status == 0){
 						
 						alert("회원가입에 필요한 정보를 입력해 주세요");
-						location.href="/web/join";
+						location.href="/join";
 					}
 				});
 			}
@@ -116,12 +117,12 @@ $(document).ready(function(){
                     <form>
                         <div id="joinInfo">
                             
-                            <input id="id" type="text" class="form-control" placeholder="email 형식의 아이디를 입력해 주세요.">
-                            <input id="name" type="text" class="form-control" placeholder="이름을 입력해 주세요.">
+                            <input id="id" type="text" class="form-control" maxlength="25" placeholder="email 형식의 아이디를 입력해 주세요.">
+                            <input id="name" type="text" class="form-control" maxlength="10" placeholder="이름을 입력해 주세요." >
                         
-                            <input id="passwd" type="password" class="form-control" placeholder="비밀번호를 입력해 주세요.">
+                            <input id="passwd" type="password" class="form-control" maxlength="20" placeholder="비밀번호를 입력해 주세요. (20글자까지 작성가능)">
                             
-                            <input id="passwdCheck" type="password" class="form-control" placeholder="비밀번호 확인">
+                            <input id="passwdCheck" type="password" class="form-control" maxlength="20" placeholder="비밀번호 확인">
                         </div>
                         
                         

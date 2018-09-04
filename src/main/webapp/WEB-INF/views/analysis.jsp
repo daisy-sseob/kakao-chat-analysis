@@ -3,11 +3,14 @@
 <!DOCTYPE html>
 <html  class="lottemarthappy">
 <head>
-  <title>KAKAO</title>
+  <title>SHS</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="resources/css/Font.css">
 <link rel="stylesheet" href="resources/css/Analysis.css">
+<link rel="shortcut icon" type="image/x-icon" href="resources/img/amCharts.png">
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <!--===================================== 차트 스크립트 ========================================-->
@@ -16,13 +19,16 @@
 <script type="text/javascript" src="https://www.amcharts.com/lib/3/themes/chalk.js"></script>
 <script type="text/javascript" src="https://www.amcharts.com/lib/3/serial.js"></script>
 <script type="text/javascript" src="https://www.amcharts.com/lib/3/radar.js"></script>
+<link  type="text/css" href="resources/amcharts/plugins/export.css" rel="stylesheet">
+<script src="resources/amcharts/plugins/export.min.js"></script>
 <!--===================================== 차트 스크립트 ========================================-->
+
 
 <script type="text/javascript">
 	$(document).ready(function(){
 		
 		$("#home").on("click",function(){
-			location.href = "/web/";
+			location.href = "/";
 		});
 		
 <%
@@ -32,13 +38,12 @@
 		var userNo = '<%=userNo%>';
 		console.log("userNo : ",userNo);
 		
-		
 		var start = 0;
 		fileList(start);
 		/*========================FileTable 총 row 계산 page갯수 산출====================*/
 		$.ajax({
 			type:"post",
-			url:"/web/fileRowCount",
+			url:"/fileRowCount",
 			data : {
 				"userNo" : userNo
 			}
@@ -47,6 +52,27 @@
 			var d = JSON.parse(data);
 			var row = d.cnt.cnt;
 			console.log("fileRow : ",d.cnt.cnt);
+			console.log("filerow d : ",d);
+			console.log("userNo : ",userNo);
+			
+			if(d.kakaoUser !== null){
+				var kakaoUserNo = d.kakaoUser.kakaoId;
+				
+				if(kakaoUserNo !== userNo){
+					
+					alert("허용되지않은 경로입니다.");
+					location.href = "/";
+				}
+			}else if(d.user !== null){
+				
+				var defaultUserNo = d.user.userNo.toString();
+				
+				if(defaultUserNo !== userNo){
+					
+					alert("허용되지않은 경로입니다.");
+					location.href = "/";
+				}
+			}
 			
 			var html = "";
 			$(".pagination").empty();
@@ -74,7 +100,7 @@
 			
 			$.ajax({
 				type:"post",
-				url:"/web/fileList",
+				url:"/fileList",
 				data:{
 					"userNo":userNo,
 					"start" : f
@@ -122,20 +148,23 @@
 						}
 					});		
 				});
-				
+/*================================================분석 시작================================================ */
+ 
 				$(".fileName").on("click",function(){
 					
+					$("#layer").show();
 					var fileNo = $(this).closest(".FileLi").find(".fileNo").text();
 					console.log(fileNo);
 					
 					$.ajax({
 						type:"post",
-						url:"/web/fileOutHadoop",
+						url:"/fileOutHadoop",
 						data: {
 							"fileNo" : fileNo
 						}
 					}).done(function(data){
 						$("#btnDiv").show();
+		 				$("#layer").hide();
 						
 						var d = JSON.parse(data);
 						
@@ -149,23 +178,36 @@
 						parseData(dataTerm);
 						parseData(dataTimeSlot);
 						
+						removeGarbage(dataTalk);
+						removeGarbage(dataSlang);
+						removeGarbage(dataTerm);
+						removeGarbage(dataTimeSlot);
+						
 						talkChart(dataTalk);
 						slangChart(dataSlang);
 						termChart(dataTerm);
 						timeSlotChart(dataTimeSlot);
 						
+						console.log(dataTalk)
 
 						$("#talk").on("click",function(){
 							$("#chartView1").show();
 							$("#chartView2").hide();
 							$("#chartView3").hide();
 							$("#chartView4").hide();
+							if(dataTalk.length <= 1){
+								alert("사용자별 대화 빈도의 데이터가 부족합니다 !");
+							}
 						});
 						$("#slang").on("click",function(){
 							$("#chartView1").hide();
 							$("#chartView2").show();
 							$("#chartView3").hide();
 							$("#chartView4").hide();
+							
+							if(dataSlang.length <= 1){
+								alert("비속어 사용 횟수의 데이터가 부족합니다 !");
+							}
 						});
 						$("#term").on("click",function(){
 							$("#chartView1").hide();
@@ -178,23 +220,42 @@
 							$("#chartView2").hide();
 							$("#chartView3").hide();
 							$("#chartView4").show();
+							if(dataTimeSlot.length <= 1){
+								alert("시간대별 대화빈도의 데이터가 부족합니다 !");
+							}
 						});
-						
 					});
 				});
+				
 				
 			});
 		}
 		
 		function parseData(data){
 			for(var i =0; i < data.length; i++){
-				
 				data[i]["column-1"] = parseInt(data[i]["column-1"]);
 			}
 		}
-		
+		function removeGarbage(data){
+			for(var i=0; i< data.length; i++){
+				if(data[i]["category"] == " "){
+					delete data[i];
+					data.shift();
+					
+					if(data[i]["category"].includes("balloonText") == true){
+						delete data[i];
+						data.shift();
+					}
+					if(data[i]["category"].includes("���") == true){
+						delete data[i];
+						data.shift();
+					}
+				}
+			}
+		}
 		function talkChart(data){
 			var data = data;
+			
 			AmCharts.makeChart("chartView1",
 			{
 				"type": "pie",
@@ -202,16 +263,27 @@
 				"titleField": "category",
 				"valueField": "column-1",
 				"fontSize": 16,
-				"color": "#000000",
-				"theme": "chalk",
+				"colors": ["#fef85a","#b0eead","#e384a6","#ff8000","#4d90d6","#c7e38c","#9986c8","#edf28c","#ffd1d4","#5ee1dc","#8badd2"],
+// 				"theme": "light",
+// 				"theme": "patterns",
+//  				"theme": "chalk",
 				"titles": [{"size":35, "text" : "대화 빈도 수"}],
-				"dataProvider" : data
+				"dataProvider" : data,
+			    "export": {
+				    "enabled": true,
+				    "menu": [ {
+				        "class": "export-main",
+				        "menu": [ "PNG", "JPG", "CSV" ]
+				      } ]
+	            }
 			});
+		}
+		function down(){
+			$('.export-main').find('ul li:eq(0) ul li:eq(0) a').trigger('click');
 		}
 		
 		function slangChart(data){
 			var data = data;
-			console.log(data);
 			AmCharts.makeChart("chartView2",
 				{
 					"type": "serial",
@@ -233,42 +305,56 @@
 							"size": 35,
 							"text": "비속어 사용 횟수"
 						}],
-					"dataProvider": data
+					"dataProvider": data,
+				    "export": {
+					    "enabled": true,
+					    "menu": [ {
+					        "class": "export-main",
+					        "menu": [ "PNG", "JPG", "CSV" ]
+					      } ]
+		            }
 				}
 			);
 		}
 		function termChart(data){
 			var data = data;
 			AmCharts.makeChart("chartView3",
-				{
-					"type": "radar",
+						{
+					"type": "serial",
 					"categoryField": "category",
-					"startDuration": 2,
-					"theme": "patterns",
-					"fontSize": 16,
+					"startDuration": 1,
+					"categoryAxis": {
+						"gridPosition": "start"
+					},
+					"trendLines": [],
 					"graphs": [{
-							"balloonText": "[[value]]",
-							"bullet": "round",
+							"balloonText": "[[title]] of [[category]]:[[value]]",
+							"fillAlphas": 0.7,
 							"id": "AmGraph-1",
+							"lineAlpha": 0,
+							"title": "graph 1",
 							"valueField": "column-1"
 						}],
-					"valueAxes": [{
-							"axisTitleOffset": 20,
-							"gridType": "circles",
-							"id": "ValueAxis-1",
-							"minimum": 0,
-							"axisAlpha": 0.15,
-							"dashLength": 3
-						}],
-					"titles": [{
-							"size":35,
-							"text":"월별 대화 빈도"
-						}],
-					"dataProvider": data
+					"legend": {
+						"enabled": true
+					},
+					"titles": [
+						{
+							"size": 35,
+							"text": "월별 대화 빈도"
+						}
+					],
+					"dataProvider": data,
+				    "export": {
+					    "enabled": true,
+					    "menu": [ {
+					        "class": "export-main",
+					        "menu": [ "PNG", "JPG", "CSV" ]
+					      } ]
+		            }
 				}
 			);
 		}
-		
 		function timeSlotChart(data){
 			var data = data;
 			
@@ -280,38 +366,32 @@
 					"categoryAxis": {
 						"gridPosition": "start"
 					},
-					"trendLines": [],
-					"graphs": [
-						{
-							"balloonText": "[[title]] of [[category]]:[[value]]",
+					"graphs": [{
+							"balloonText": "[[value]]",
 							"bullet": "round",
 							"id": "AmGraph-1",
-							"title": "graph 1",
-							"type": "smoothedLine",
 							"valueField": "column-1"
-						}
-					],
-					"guides": [],
-					"valueAxes": [
-						{
+						}],
+					"valueAxes": [{
 							"id": "ValueAxis-1",
-							"title": "Axis title"
-						}
-					],
-					"allLabels": [],
-					"balloon": {},
+						}],
 					"legend": {
 						"enabled": true,
 						"useGraphSettings": true
 					},
-					"titles": [
-						{
+					"titles": [{
 							"id": "Title-1",
 							"size": 35,
 							"text": "시간대별 대화 빈도"
-						}
-					],
-					"dataProvider": data
+						}],
+					"dataProvider": data,
+				    "export": {
+					    "enabled": true,
+					    "menu": [ {
+					        "class": "export-main",
+					        "menu": [ "PNG", "JPG", "CSV" ]
+					      } ]
+		            }
 				}
 			);
 		}
@@ -319,6 +399,10 @@
 </script>
 </head>
 <body>
+   	<div id="layer">
+   		<img id="lavaLamp" src="resources/img/Lava Lamp-1s-200px.svg">
+   		<p>분석중 입니다 ..</p>
+   	</div>
     <div id="outer">
         <div id="left">
             <div id="leftTitle" class="animation">
@@ -331,31 +415,21 @@
             </div>
             
             <div id="leftList" class="animation">
-            
                 <div id="fileList">
                     <ol id="olList"></ol>
                 </div>
-                
                 <div id="paging">
-                  <ul class="pagination">
-<!--                     <li><a href="#">1</a></li> -->
-<!--                     <li><a href="#">2</a></li> -->
-<!--                     <li><a href="#">3</a></li> -->
-<!--                     <li><a href="#">4</a></li> -->
-<!--                     <li><a href="#">5</a></li> -->
-                  </ul>
-                    
-                    
+                  <ul class="pagination"></ul>
                 </div>
             </div>
         </div>
-
+		
         <div id="right">
             <div id="chartDiv">
 				<div id="chartBtnDiv">
                     <div id="btnDiv">
                         <input type="button" id="talk" class="btn btn-default" value="사용자별 대화 빈도">
-                        <input type="button" id="slang" class="btn btn-default" value="비속어 사용 빈도">
+                        <input type="button" id="slang" class="btn btn-default" value="비속어 사용 횟수">
                         <input type="button" id="term" class="btn btn-default" value="월별 대화 빈도">
                         <input type="button" id="timeSlot" class="btn btn-default" value="시간대별 대화 빈도">
                     </div>
@@ -366,9 +440,6 @@
 					<div id="chartView2" class="chartView"></div>           
 					<div id="chartView3" class="chartView"></div>           
 					<div id="chartView4" class="chartView"></div>           
-                </div>
-                <div id="saveDive">
-                    <input id="save" type="button" class="btn btn-default" value="저장하기">
                 </div>
             </div>
         </div>

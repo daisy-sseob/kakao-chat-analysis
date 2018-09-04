@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>kakao login</title>
+<link rel="shortcut icon" type="image/x-icon" href="images/icon_goodee.png" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+<style>
+html, body {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+#wrap {
+	width: 512px;
+	height: 100px;
+	-ms-transform: translate(calc(50vw - 256px), calc(50vh - 100px));		/* IE 9 */
+  -webkit-transform: translate(calc(50vw - 256px), calc(50vh - 100px));	/* Safari */
+  transform: translate(calc(50vw - 256px), calc(50vh - 100px));
+}
+p {
+	background-color: yellow;
+}
+</style>
+<script>
+$(document).ready(function(){
+	// http://gudi.iptime.org:80 일때만 사용 가능 (aip 신청 : https://developers.kakao.com/)
+	Kakao.init('421cbce990b3e8f628f6feb5c5d70c70');
+	// 화면 버튼 이벤트
+	$("button").on("click", function(){
+		var target = $(this).attr("id");
+		kakaoEvent(target); // 선택된 버튼 id 보내기.
+	});
+	// 선택된 id 확인 후 이벤트 제어 하기
+	function kakaoEvent(target){
+		if(target === "login"){
+			// 카카오톡 로그인 시 사용하는 로그인 요청
+			Kakao.Auth.login({
+				success: function(authObj) {
+					console.log("Kakao.Auth.login()");
+					kakaoEvent("request");
+        },
+        fail: function(err) {
+        	console.log(err);
+        }
+			});
+		}else if(target === "logout"){
+			$("#user").text("");
+			// 카카오톡 로그아웃 할때 토큰 삭제 요청
+			Kakao.Auth.logout();
+			// 카카오톡 사이트로 로그아웃 요청
+			var kakaoWindow = window.open("http://developers.kakao.com/logout");
+			setTimeout(function(){
+				kakaoWindow.close(); // 로그아웃 요청 후 화면 닫기 위해서 딜레이 처리
+				alert("로그아웃이 되었습니다.");
+			}, 500);
+		}else if(target === "request"){
+			// 카카오톡 로그인 후 사용자 정보 받기 위한 요청
+			Kakao.API.request({
+				url: '/v2/user/me',
+				success: function(res) {
+					var user = {
+							"email" : res.kakao_account.email,
+							"nickname" : res.properties.nickname,
+							"profileImage" : res.properties.profile_image
+					}
+					console.log(user);
+					$("#user").text("사용자 : " + user.nickname);
+				},
+				fail: function(error) {
+					console.log(error);
+				}
+			});
+		}else if(target === "check") {
+			// 카카오톡 토큰 확인 요청
+			alert(Kakao.Auth.getAccessToken());
+		}else if(target === "download") {
+			var filePath = window.prompt("Enter a file URL","http://gudi.iptime.org/kakao.zip");
+    	$('<form></form>').attr('action', filePath).appendTo('body').submit().remove();
+		} else {
+			alert("선택된 내역이 없습니다.");
+		}
+	}
+});
+</script>
+</head>
+<body>
+	<section id="wrap">
+		<h1>카카오톡 로그인</h1>
+		<button type="button" id="login">로그인</button>
+		<button type="button" id="logout">로그아웃</button>
+		<button type="button" id="check">토큰확인</button>
+		<button type="button" id="download">소스받기</button>
+		<p id="user"></p>
+	</section>
+</body>
+</html>

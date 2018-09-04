@@ -2,9 +2,10 @@ html,body{
         margin: 0;
         padding: 0;
         border: 0;
+        background-color: black;
     }
     #outer{
-        height: 100vh;
+        height: 90vh;
         width: 1920px;
         float: left;
         background-color: black;
@@ -47,9 +48,7 @@ html,body{
         width: 42%;
         float: left;
     }
-    #top-R-bottom{
-        
-    }
+
     .btn_div{
         width: 90px;
         height: 30px;
@@ -85,9 +84,14 @@ html,body{
         margin-right: auto;
         border-radius: 7px;
     }
-    #h1 div{
+    #h1 {
+    	width: 100%;
+    	height: 70px;
+    }
+    #h1 h1{
      float: left;
     }
+    
     #h2{
         float: left;
     }
@@ -106,9 +110,20 @@ html,body{
 		text-align: left;
     }
     #img{
-        margin-top: 15px;
         margin-left: 15px;
+        margin-top:15px;
+        float: left;
     }
+   	#kakaoProfile{
+		height: 100px;
+		border-radius: 50px;
+		margin-left: 315px;
+		padding-top: 10px;
+	}
+	#kakaoProfile:hover{
+		cursor: pointer;
+		opacity: 0.85;
+	}
     #fileSubmit{
     	float: left;
     	width: 20%;
@@ -134,6 +149,28 @@ html,body{
     #checkLogin{
     	width: 100%;
     	margin-left: 560px;
+    }
+    #checkFile{
+    	width: 100%;
+    	margin-left: 560px;    
+    }
+    #footerDiv{
+    	height: 10vh;
+    	width: 100%;
+        text-align: center;
+        background-color: black
+    }
+    #footer{
+		width: 60%;
+		height: 100%;
+		text-align: center;
+        margin-left: 380px;
+		color: white;
+        font-size: 20px;
+    }
+    #footer p {
+        padding: 0;
+        margin: 0;
     }
     .animation {
     animation-name: slide;

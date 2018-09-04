@@ -28,7 +28,8 @@ public class KaKaoSlangMapper extends Mapper<LongWritable, Text, Text, IntWritab
 				 || content.contains("걸레") == true || content.contains("걸1레") == true || content.contains("아가리") == true || content.contains("아갈통") == true
 				 || content.contains("악알이") == true || content.contains("닥쳐") == true || content.contains("창녀") == true || content.contains("창남") == true
 				 || content.contains("장애인") == true || content.contains("좡애인") == true  || content.contains("보지") == true || content.contains("섹스") == true
-				 || content.contains("섻스") == true || content.contains("애미") == true) {
+				 || content.contains("섻스") == true || content.contains("애미") == true || content.contains("창년") == true || content.contains("존나") == true
+				 || content.contains("졷나") == true || content.contains("줫나") == true || content.contains("졸라") == true || content.contains("존니") == true) {
 			
 			context.write(outputKey, outputValue);
 		}

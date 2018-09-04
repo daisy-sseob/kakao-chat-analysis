@@ -21,18 +21,20 @@ public class KaKaoTimeSlotMapper extends Mapper<LongWritable, Text, Text, IntWri
 		
 		String tt = bean.getTimeSlot();
 		int tl = tt.length();
+		
 		String timeSlot = "";
 		if(tl >= 6) {
 			timeSlot = tt.substring(0, tt.lastIndexOf(":")) + "시";
-//			System.out.println(timeSlot);
 		}
 		
 		
 		//시간대별 분석
 		outputKey.set(timeSlot);
 		
-		if(bean.getContents().length() > 10 ) {  
-			context.write(outputKey, outputValue);
+		if(bean.getContents().length() > 10 ) {
+			if(timeSlot.indexOf("�") == -1) {
+				context.write(outputKey, outputValue);
+			}
 		}
 	}
 }
